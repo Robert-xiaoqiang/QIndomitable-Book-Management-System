@@ -1,0 +1,28 @@
+{% extends "base.html"%}
+{% block header %}
+<div align="center">
+  <h1 align = "enter">A New User</h1>
+</div>
+{% endblock header %}
+
+{% block content %}
+
+<div align = "center">
+  {% if not flag %}
+  <p class = "text-danger"><font size = "5">invalid user_name or password, Try Again</font></p>                    
+  {% endif %}
+  <form action="{% url 'new_user' %}" method='post' class="form">
+    {% csrf_token %}
+    <!-- <label for="username">用户名</label>
+    {{ form.user_name }} <span style="color: red"></span><br/>
+    <label for="username">密码 </label>
+    {{ form.pass_word }} <span style="color: red"></span><br/>
+    <button type="submit" class="btn btn-primary" data-toggle="button">注册并登陆</button> -->
+    <label for="username"><font size = "5">用户名</font></label>
+    {{ form.user_name }} <span style="color: red"></span><br/><br/>
+    <label for="username"><font size = "5">密码</font></label>
+    {{ form.pass_word }} <span style="color: red"></span><br/><br/>
+    <button type="submit" class="btn btn-info">注册并登陆</button>  
+  </form>
+</div>
+{% endblock content %}

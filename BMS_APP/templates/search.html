@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>QBMS</title>
+    <link href="/static/bootstrap3/css/bootstrap.min.css" rel="stylesheet"> 
+   <link href="/static/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet" > 
+
+    <style>
+      body {
+        padding-top: 70px;
+      }
+      .left {
+        float: left;
+        width: 500px;
+        height: 300px;
+      }
+      .right {
+        margin-left: 310px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class = "navbar navbar-default navbar-fixed-top" role = "navigation">
+      <div class = "container">
+        <div class = "navbar-header">
+          <button type = "button" class = "navbar-toggle collapsed" data-toggle = "collapse" data-target = "#bs-example-navbar-collapse-1">
+            <span class = "sr-only">Toggle navigation</span>
+            <span class = "icon-bar"></span>
+            <span class = "icon-bar"></span>
+            <span class = "icon-bar"></span>
+            <span class = "icon-bar"></span>
+          </button>
+          <a class = "navbar-brand" href = " {% url 'index' %}">QIndomitable Book Management System</a>
+        </div>
+        <div class = "collapse navbar-collapse" id = "bs-example-navbar-collapse-1">
+          <ul class = "nav nav-pills">
+            <li><a href = "{% url 'user' user.user_id %}">Hello! {{ user.user_name }}</a></li>
+            <li><a href = "{% url 'search' user.user_id %}">图书查询/借阅</a></li>
+            <li><a href = "{% url 'borrow_history' user.user_id %}">借阅历史/还书</a></li>
+            <li><a href = "{% url 'card_register' user.user_id %}">借书证办理</a></li>
+            <li><a href = "{% url 'reader' user.user_id %}">我要成为读者(信息完善)</a></li>
+            <li><a href = "#">我要成为管理员</a></li>
+          </ul>
+        </div>        
+      </div>
+    </nav>
+      <div class="container">
+          <form class="form-horizontal" role="form" action = "{% url 'search' user.user_id %}" method = 'post'>
+              {% csrf_token %} 
+              <label for="name_select">书名检索</label> 
+              <select name = "book_name" id="name_select" class="selectpicker bla bla bli" multiple data-live-search="true">
+                  <option value = "all">all</option>    
+                  {% for i in book_names %}
+                      <option value= "{{ i.book_name }}" >{{ i.book_name }}</option> 
+                  {% empty %}
+                  {% endfor %} 
+              </select>
+              <label for="name_select">作者检索</label> 
+              <select name = "author" id="name_select" class="selectpicker bla bla bli" multiple data-live-search="true">
+              <option value = "all">all</option>    
+                  {% for i in authors %}
+                      <option value= "{{ i.author }}" >{{ i.author }}</option> 
+                  {% empty %}
+                  {% endfor %} 
+              </select><br/><br/>
+              <label for="name_select">印刷检索</label> 
+              <select name = "publisher" id="name_select" class="selectpicker bla bla bli" multiple data-live-search="true">
+              <option value = "all">all</option>    
+                  {% for i in publishers %}
+                      <option value= "{{ i.publisher }}" >{{ i.publisher }}</option> 
+                  {% empty %}
+                  {% endfor %} 
+              </select>
+              <label for="name_select">出版日期</label> 
+              <select name = "pub_date" id="name_select" class="selectpicker bla bla bli" multiple data-live-search="true">
+              <option value = "all">all</option>    
+                  {% for i in pub_dates %}
+                      <option value= "{{ i.pub_date }}" >{{ i.pub_date }}</option> 
+                  {% empty %}
+                  {% endfor %} 
+              </select><br/><br/>
+              <label for="name_select">类别检索</label> 
+              <select name = "class_info_id" id="name_select" class="selectpicker bla bla bli" multiple data-live-search="true">
+              <option value = "all">all</option>    
+                  {% for i in class_infos %}
+                      <option value = "{{ i.class_info_id }}" >{{ i.class_intro }}</option> 
+                  {% empty %}
+                  {% endfor %} 
+              </select>
+              <button type="submit" class="btn btn-info">Query</button>
+          </form>
+          {% if query_condition %}
+            <p class = "text-primary"><font size = "3">Query Condition: {{ query_condition }}</font></p>
+          {% else %}
+            <p class = "text-primary"><font size = "3">Query Conditions: None</font></p>
+          {% endif %}
+      </div>
+      <div style = "padding: 10px 20px 10px;">
+      <table class="table table-bordered">
+        <caption class = "text-primary"><p><font size = "3">Query Results</font></p></caption>
+        <thead>
+          <tr>
+            <th>书名</th>
+            <th>作者</th>
+            <th>所属类别</th>
+            <th>介绍</th>
+            <th>出版社</th>
+            <th>出版日期</th>
+            <th>余量</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for i in books %}
+          <tr>
+            <td>{{ i.book_name }}</td>
+            <td>{{ i.author }}</td>
+            <td>{{ i.class_info.class_intro }}</td>
+            <td>{{ i.introduction }}</td>
+            <td>{{ i.publisher }}</td>
+            <td>{{ i.pub_date }}</td>
+            <td>
+              {% if i.remain %}
+              <p class = "text-primary">
+              <a href = "{% url 'choose' user.user_id  i.book_id %}">{{ i.remain }}, 可以借出</a>
+              </p>
+              {% else %}
+                <p class = 'text-danger'>{{ i.remain }}, 不可借出</p>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <script src="/static/JQuery/jquery.min.js"></script>
+    <script src="/static/bootstrap3/js/bootstrap.min.js"></script>
+   <script src="/static/bootstrap-select/dist/js/bootstrap-select.js"></script>
+  </body>
+</html>

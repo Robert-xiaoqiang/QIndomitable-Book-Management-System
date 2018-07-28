@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>QBMS</title>
+    <link href="/static/bootstrap3/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 70px;
+      }
+    </style>
+  </head>
+  <body background="/static/images/index.jpg">
+    <nav class = "navbar navbar-default navbar-fixed-top navbar-inverse" role = "navigation">
+      <div class = "container">
+        <div class = "navbar-header">
+          <button type = "button" class = "navbar-toggle collapsed" data-toggle = "collapse" data-target = "#bs-example-navbar-collapse-1">
+            <span class = "sr-only">Toggle navigation</span>
+            <span class = "icon-bar"></span>
+            <span class = "icon-bar"></span>
+            <span class = "icon-bar"></span>
+            <span class = "icon-bar"></span>
+          </button>
+          <a class = "navbar-brand" href = " {% url 'index' %}">QIndomitable Book Management System</a>
+        </div>
+        <div class = "collapse navbar-collapse" id = "bs-example-navbar-collapse-1">
+          <ul class = "nav navbar-nav">
+            <li><a href = "#">游客图书</a></li>
+            <li><a href = "#">游客借阅</a></li>
+            <li><a href = "#">关于</a></li>
+            <li class = "dropdown">
+              <a href = "#" class = "dropdown-toggle" data-toggle = "dropdown">注册/登录<span class = "caret"></span></a>
+              <ul class = "dropdown-menu" role = "menu">
+                <li><a data-toggle="modal" data-target="#register" href=""><span class="glyphicon glyphicon-user"></span> 注册</a></li>
+                <li><a data-toggle="modal" data-target="#login" href=""><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+                <li><a data-toggle="modal" data-target="#contact" href=""><span class="glyphicon glyphicon-envelope"></span> 联系开发者</a></li>
+              </ul>
+            </li> 
+          </ul>
+        </div>        
+      </div>
+    </nav>     
+    <div class="page-header">
+      {% block header %}{% endblock header %}
+    </div>
+    <div>
+      {% block content %}{% endblock content %}
+    </div>
+    <div id="register" class="modal fade" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+              <button class="close" data-dismiss="modal">
+                  <span>&times;</span>
+              </button>
+          </div>
+          <div class="modal-title">
+              <h1 class="text-center">注册</h1>
+          </div>
+          <div class="modal-body">
+            <form class="form-group" action="{% url 'index' %}" method = 'post'>
+              {% csrf_token %}
+              <div class="form-group">
+                  <label for="">用户名</label>
+                  <input class="form-control" name = "register_user_name" type="text" placeholder="6-15位字母或数字">
+              </div>
+              <div class="form-group">
+                  <label for="">密码</label>
+                  <input class="form-control" name = "register_pass_word" type="password" placeholder="至少6位字母或数字">
+              </div>
+              <div class="form-group">
+                  <label for="">再次输入密码</label>
+                  <input class="form-control" name = "register_pass_word_again" type="password" placeholder="至少6位字母或数字">
+              </div>
+              <div class="text-right">
+                  <button class="btn btn-primary" type="submit">注册并登陆</button>
+                  <button class="btn btn-danger" data-dismiss="modal">取消</button>
+              </div>
+              <a href="" data-toggle="modal" data-dismiss="modal" data-target="#login">已有账号？点我登录</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+     <div id="login" class="modal fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              <button class="close" data-dismiss="modal">
+                  <span>&times;</span>
+              </button>
+            </div>
+            <div class="modal-title">
+                <h1 class="text-center">登录</h1>
+            </div>
+            <div class="modal-body">
+            <form class="form-group" action="{% url 'index' %}" method="post">
+              {% csrf_token %}
+              <div class="form-group">
+                  <label for="">用户名</label>
+                  <input class="form-control" name = "user_name"type="text" placeholder="">
+              </div>
+              <div class="form-group">
+                  <label for="">密码</label>
+                  <input class="form-control" name = "pass_word" type="password" placeholder="">
+              </div>
+              <div class="text-right">
+                  <button class="btn btn-primary" type="submit">登录</button>
+                  <button class="btn btn-danger" data-dismiss="modal">取消</button>
+              </div>
+              <a href="" data-toggle="modal" data-dismiss="modal" data-target="#register">还没有账号？点我注册</a>
+            </form>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div id="contact" class="modal fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              <button class="close" data-dismiss="modal">
+                  <span>&times;</span>
+              </button>
+            </div>
+            <div class="modal-title">
+                <h1 class="text-center">联系开发者</h1>
+            </div>
+            <div class="modal-body">
+              <div align = "center">
+                <p class = "text-info"><font size = "4">数据库系统概念实验5<br/>3160101819@zju.edu.cn<br/>QIndomitable</font></p>
+              </div>
+            </div>
+          </div>  
+        </div>
+    </div>
+    <script src="/static/JQuery/jquery.min.js"></script>
+    <script src="/static/bootstrap3/js/bootstrap.min.js"></script>
+  </body>
+</html>

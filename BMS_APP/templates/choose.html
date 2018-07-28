@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>QBMS</title>
+    <link href="/static/bootstrap3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/bootstrap-select/dist/css/bootstrap-select.css" rel="stylesheet" > 
+    <style>
+      body {
+        padding-top: 70px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class = "navbar navbar-default navbar-fixed-top" role = "navigation">
+      <div class = "container">
+        <div class = "navbar-header">
+          <button type = "button" class = "navbar-toggle collapsed" data-toggle = "collapse" data-target = "#bs-example-navbar-collapse-1">
+            <span class = "sr-only">Toggle navigation</span>
+            <span class = "icon-bar"></span>
+            <span class = "icon-bar"></span>
+            <span class = "icon-bar"></span>
+            <span class = "icon-bar"></span>
+          </button>
+          <a class = "navbar-brand" href = " {% url 'index' %}">QIndomitable Book Management System</a>
+        </div>
+        <div class = "collapse navbar-collapse" id = "bs-example-navbar-collapse-1">
+          <ul class = "nav nav-pills">
+            <li><a href = "{% url 'user' user.user_id %}">Hello! {{ user.user_name }}</a></li>
+            <li><a href = "{% url 'search' user.user_id %}">图书查询/借阅</a></li>
+            <li><a href = "{% url 'borrow_history' user.user_id %}">借阅历史/还书</a></li>
+            <li><a href = "{% url 'card_register' user.user_id %}">借书证办理</a></li>
+            <li><a href = "{% url 'reader' user.user_id %}">我要成为读者(信息完善)</a></li>
+            <li><a href = "#">我要成为管理员</a></li>
+          </ul>
+        </div>        
+      </div>
+    </nav>
+    <div style = "padding: 10px 20px 10px;">
+      <table class="table table-bordered">
+        <caption class = "text-info" ><h1>请选择1个reader, 1个card</h1></caption>
+        <thead>
+          <tr>
+            <th>姓名</th>
+            <th>借书证信息</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in readers %}
+            <tr>
+              <td>{{ i.name }}</td>
+              <td>
+                {% if readers_cards|get_item:i.reader_id %}
+                  <a href = "{% url 'registering' user.user_id i.reader_id %}">有/充值</a>
+                  <form class="form-horizontal" role="form" action = "{% url 'choose' user.user_id book.book_id %}" method = 'post'>
+                    {% csrf_token %} 
+                    <label for="name_select">选择一个借书证</label> 
+                    <select name = "{{ i.reader_id }}" id="name_select" class="selectpicker bla bla bli" multiple data-live-search="true">
+                      {% for j in  readers_cards|get_item:i.reader_id %}
+                        {% if j in book_cards %}
+                          <option disabled = "disabled" value = "{{ j.card_id }}">ID: {{ j.card_id }}, 这个借书证借了该书还没归还</option>
+                        {% elif j.remain_times == 0 %}
+                          <option disabled = "disabled"value = "{{ j.card_id }}">ID: {{ j.card_id }}, 剩余次数: {{ j.remain_times }}</option>
+                        {% else %}
+                          <option value = "{{ j.card_id }}">ID: {{ j.card_id }}, 剩余次数: {{ j.remain_times }}</option>
+                        {% endif %}
+                      {% empty %}
+                      {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-info">选定</button>
+                  </form>
+                {% else %}
+                  <a href = "{% url 'registering' user.user_id i.reader_id %}" >无/办理</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+          {% endfor %}
+        </tbody>
+      </table> 
+    </div>
+    <script src="/static/JQuery/jquery.min.js"></script>
+    <script src="/static/bootstrap3/js/bootstrap.min.js"></script>
+    <script src="/static/bootstrap-select/dist/js/bootstrap-select.js"></script>
+  </body>
+</html>
