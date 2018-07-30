@@ -1,6 +1,6 @@
 # QIndomitable-Book-Management-System(QBMS) 
 
-- QBMS is our Database System curriculum B/S project based Python and HTML
+- QBMS is our Database System curriculum B/S project based on Python and HTML
 - Implemented by [Xiaoqiang Wang](https://robert-xiaoqiang.github.io/)
 
 ## Features
